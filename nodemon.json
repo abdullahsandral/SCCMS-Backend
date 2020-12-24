@@ -1,0 +1,12 @@
+{
+    "env" : {
+        "DB_NAME"     : "sccms",
+        "DB_USERNAME" : "root",
+        "DB_PASSWORD" : "",
+        "DB_URL"      : "localhost",
+        "JWT_KEY"     : "Mirza TENSION Baig MUGHAL",
+        "CLOUD_NAME"  : "dfeok2xvr",
+        "CLOUD_API_KEY"  : "989936257498136",
+        "CLOUD_API_SECRET"  : "xSYCFh-AkDoTe6gueGsFx8AekN0"
+      }
+}
