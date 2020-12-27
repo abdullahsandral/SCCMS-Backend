@@ -45,14 +45,13 @@ const createNewTeacher = async (req , res , next) =>
     
         if(!createdTeacher) 
         return next( new HttpError("Teacher Could not Be Created"));
-    
     } catch (error) {   return next( new HttpError(error)) };
     
     let hashedPassword;
     try
     {
         hashedPassword = await bcrypt.hash(password,7);
-        if(!hashedPassword) 
+        if(!hashedPassword)
         return next( new HttpError("Teacher Created Successfully. Hashing Password Failed"));
 
     } catch (error) {return next(new HttpError(error))}
@@ -60,7 +59,7 @@ const createNewTeacher = async (req , res , next) =>
     const teacherId = createdTeacher.dataValues.id;
     try
     {
-        newUser = await Users.create({ user_name: email, image_url: req.file.filename, role: 'teacher', user_id: teacherId, password: hashedPassword })
+    newUser = await Users.create({ name: first_name, user_name: email, image_url: req.file.filename, role: 'teacher', user_id: teacherId, password: hashedPassword })
     
         if(!newUser) 
         return next( new HttpError("Student Could not added to user list"));
@@ -84,7 +83,7 @@ const editTeacherById = async (req, res, next) =>
     } catch (error) {   return next(new HttpError(error));    }
 
     const {first_name, last_name, father_name, cnic, contact_number, email, gender, permanent_address, mailing_address, date_of_birth, qualification } = req.body;
-    let updatedTeacher, image_url;
+    let updatedTeacher, image_url, response;
 
     image_url = req.file ? req.file.filename : teacher.image_url
     try 
@@ -96,10 +95,11 @@ const editTeacherById = async (req, res, next) =>
             )
 
         if(req.file) fileSystem.unlink('uploads/images/'+teacher.image_url, err => console.log(err));
-    
+        response = { status: updatedTeacher ? 'Success' : 'Error',
+        message: updatedTeacher ? 'Teacher updated Successfully.' : 'Teacher could not updated.'}
     } catch (error) {   return next( new HttpError(error)) };
 
-    setTimeout(() => res.status(200).json(updatedTeacher),500)
+    setTimeout(() => res.status(200).json(response),500)
     
 }
 

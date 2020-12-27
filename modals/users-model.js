@@ -7,6 +7,10 @@ var users= db.define('users', {
         autoIncrement: true,
         primaryKey: true
     },
+    name: {
+        type: sequelize.STRING,
+        allowNull: false ,
+    },
     user_name: {
         type: sequelize.STRING,
         allowNull: false ,

@@ -12,9 +12,7 @@ const getAllStudents = async (req, res, next) =>
     let allStudents;
     try 
     {
-        // allStudents  = await db.query('SELECT s.id, s.Roll_Number, s.first_name, s.last_name, s.email,s.contact_number, c.Class_Name FROM `students` as s INNER JOIN classes as c on c.id=s.id ORDER BY `s`.`id` ASC',
-        // {type: db.QueryTypes.SELECT})
-        allStudents = Students.findAll({include: Classes})
+        allStudents = await Students.findAll({include: Classes})
 
     } catch (error) {   return next(new HttpError(error));    }
     
@@ -63,7 +61,7 @@ const createNewStudent = async (req , res , next) =>
     try
     {
         newUser = await Users.create(
-            { user_name: email, image_url: req.file.filename, role: 'student', user_id: studentId, password: hashedPassword })
+            { name: first_name, user_name: email, image_url: req.file.filename, role: 'student', user_id: studentId, password: hashedPassword })
     
         if(!newUser) 
         return next( new HttpError("Student Could not added to user list"));

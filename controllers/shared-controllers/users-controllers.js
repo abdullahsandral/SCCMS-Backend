@@ -12,12 +12,9 @@ const getAllUsers = async (req, res, next) =>
     var allUsers;
     try 
     {
-        // allUsers = await db.query(`SELECT id, first_name, contact_number, 'Teacher' as 'Role'  FROM teachers UNION SELECT id, first_name, contact_number,  'Student' as 'Role' FROM students ORDER BY 'first_name' ASC`,
-        // {type: db.QueryTypes.SELECT})
-            allUsers = Users.findAll();
+       allUsers = await Users.findAll();
     } catch (error) {return next(new HttpError(error))}
-
-    setTimeout(() => res.status(200).send(allUsers),500)
+    setTimeout(() => res.status(200).json(allUsers),500)
 }
 
 const SignIn = async (req, res, next) =>
