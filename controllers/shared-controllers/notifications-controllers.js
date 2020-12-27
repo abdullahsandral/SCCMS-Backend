@@ -7,7 +7,7 @@ const getNotifications = async (req, res, next) =>
     let notifications ;
     try 
         {
-            notifications = await Notifications.findAll();
+            notifications = await Notifications.findAll({ include: Users });
         } catch (error) {   return next( new HttpError(error)) };
     
 
@@ -29,23 +29,15 @@ const getNotificationById = async (req, res, next) =>
 
 const addNotification = async (req, res, next) =>
 {
-    const { creator_id, creator_role, subject, description } = req.body;
-    let user;
-    try 
-        {
-            user = await Users.findOne({ where: { role: creator_role, user_id: creator_id }})
-            if(!user)
-            return next( new HttpError("Invlid User"));
-        
-        } catch (error) {   return next( new HttpError(error)) };
-
+    const { creator_id, subject, description } = req.body;
     let newNotification, image_url;
+
     if(req.file)  image_url = req.file.filename; else image_url = null;
-    try 
+    try
         {
-            newNotification = await Notifications.create({ subject, description, image_url, creator_id: user.dataValues.id })
+            newNotification = await Notifications.create({ subject, description, image_url, creator_id })
         
-            if(!newNotification) 
+            if(!newNotification)
             return next( new HttpError("Notifiction Could not Be Created"));
         
         } catch (error) {   return next( new HttpError(error)) };

@@ -39,8 +39,8 @@ const SignIn = async (req, res, next) =>
 
     } catch (error) { return next(new HttpError(error)) }
 
-    const { user_id, image_url, user_name, role } = existingUser;
-    userData = { user_id, image_url, user_name, role };
+    const { id, name, user_id, image_url, user_name, role, } = existingUser;
+    userData = {  id, name, user_id, image_url, user_name, role };
    setTimeout(() => res.status(200).json(userData),1000);
 }
 exports.getAllUsers = getAllUsers;
