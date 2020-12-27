@@ -1,13 +1,17 @@
 var sequelize = require("sequelize");
 var db = require("../config/database-config");
 var classes= db.define('classes', {
-    Class_ID: {
+    id: {
         type: sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
     },
-    Class_Name: {
+    code: {
+        type: sequelize.STRING,
+        allowNull: false
+    },
+    name: {
         type: sequelize.STRING,
         allowNull: false
     },

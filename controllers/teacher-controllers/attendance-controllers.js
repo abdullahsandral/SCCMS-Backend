@@ -14,7 +14,7 @@ const getTeacherSubjects= async (req, res, next) =>
     let teacherSubjects;
     try 
     {
-        teacherSubjects = await Subjects.findAll({where: {ID: tID}})
+        teacherSubjects = await Subjects.findAll({where: {id: tID}})
        
     } catch (error) {return next(new HttpError(error))}
     let allStudents;
@@ -41,7 +41,7 @@ const getSubjectAttendance= async (req, res, next) =>
     let attendanceData;
     try 
         { 
-            attendanceData = await Attendance.findAll({where: {Attendance_Date: date, Class_ID: classID, Subject_ID: subjectID}})
+            attendanceData = await Attendance.findAll({where: {Attendance_Date: date, id: classID, id: subjectID}})
        
         } catch (error) {return next(new HttpError(error))}
     
@@ -56,7 +56,7 @@ const markSubjectAttendance= async (req, res, next) =>
    {   
        try 
         { await Attendance.create({Attendance_Status: oneRow.attendanceStatus, Attendance_Date: date,
-            Class_ID: classID, ID:oneRow.studentID, Subject_ID: subjectID})
+            id: classID, id:oneRow.studentID, id: subjectID})
        
         } catch (error) {return next(new HttpError(error))}
    }
@@ -72,7 +72,7 @@ const updateSubjectAttendance= async (req, res, next) =>
    {   
        try 
         { await Attendance.update({Attendance_Status: oneRow.attendanceStatus},
-        {where: {Attendance_Date: date, Class_ID: classID, ID:oneRow.studentID, Subject_ID: subjectID}} )
+        {where: {Attendance_Date: date, id: classID, id:oneRow.studentID, id: subjectID}} )
        
         } catch (error) {return next(new HttpError(error))}
    }

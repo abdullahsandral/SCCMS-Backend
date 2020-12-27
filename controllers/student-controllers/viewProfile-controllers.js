@@ -10,7 +10,7 @@ const viewProfile = async (req, res, next) =>
     var student;
     try 
     {
-        student = await db.query(`SELECT * FROM students as s INNER JOIN classes as c on c.Class_ID=s.Class_ID WHERE s.ID = '${sID}' `,
+        student = await db.query(`SELECT * FROM students as s INNER JOIN classes as c on c.id=s.id WHERE s.id = '${sID}' `,
         {type: db.QueryTypes.SELECT})
        
     } catch (error) {return next(new HttpError(error))}

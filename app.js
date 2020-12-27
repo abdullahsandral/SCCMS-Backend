@@ -19,7 +19,7 @@ const app = express();
 
 // (async () => 
 // {
-//     console.log(await bcrypt.hash('password',7))
+//     console.log(await bcrypt.hash('123456',7))
 // })();
 
 app.use(cors());

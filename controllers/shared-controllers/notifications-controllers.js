@@ -1,5 +1,6 @@
 const HttpError = require('../../modals/HTTP-Error');
 const Notifications = require('../../modals/notifications-model');
+const Users = require('../../modals/users-model');
 
 const getNotifications = async (req, res, next) =>
 {
@@ -19,7 +20,7 @@ const getNotificationById = async (req, res, next) =>
     let notification ;
     try 
         {
-            notification = await Notifications.findOne({where: {ID: nID}});
+            notification = await Notifications.findOne({where: {id: nID}});
         } catch (error) {   return next( new HttpError(error)) };
     
 
@@ -28,17 +29,24 @@ const getNotificationById = async (req, res, next) =>
 
 const addNotification = async (req, res, next) =>
 {
-    const {creatorName,subject,description} = req.body; 
-    let newNotification, image;
-    
-    if(req.file)  image = req.file.filename; else image = null;
-    console.log(image)
+    const { creator_id, creator_role, subject, description } = req.body;
+    let user;
     try 
         {
-            newNotification = await Notifications.create({Creator_Name: creatorName, Notification_Subject: subject, Description: description, Notification_Image: image })
+            user = await Users.findOne({ where: { role: creator_role, user_id: creator_id }})
+            if(!user)
+            return next( new HttpError("Invlid User"));
+        
+        } catch (error) {   return next( new HttpError(error)) };
+
+    let newNotification, image_url;
+    if(req.file)  image_url = req.file.filename; else image_url = null;
+    try 
+        {
+            newNotification = await Notifications.create({ subject, description, image_url, creator_id: user.dataValues.id })
         
             if(!newNotification) 
-            return next( new HttpError("Subjects Could not Be Created"));
+            return next( new HttpError("Notifiction Could not Be Created"));
         
         } catch (error) {   return next( new HttpError(error)) };
 
@@ -48,31 +56,30 @@ const addNotification = async (req, res, next) =>
 const updateNotification =  async (req, res, next) =>
 {
     const nID = req.params.nID;
-    const {subject,description} = req.body; 
+    const { subject, description } = req.body; 
 
     let notification;
     try 
     {
-        notification  = await Notifications.findOne({where : {ID : nID}});
+        notification  = await Notifications.findOne({where : {id : nID}});
 
-        if(!notification) return next(new HttpError("Notification With this ID Does't Exist"))
+        if(!notification) return next(new HttpError("Notification With this id Does't Exist"))
 
     } catch (error) {   return next(new HttpError(error));    }
 
-    let updatedNotification,image;
+    let updatedNotification,image_url;
 
-    if(req.file)  image = req.file.filename; else image = notification.Notification_Image;
+    if(req.file)  image_url = req.file.filename; else image_url = notification.Notification_Image;
 
         try 
         {
-            updatedNotification = await Notifications.update({Notification_Subject: subject, Description: description, Notification_Image: image},{where:{ID: nID}})
-        
-            if(!updatedNotification) 
+            updatedNotification = await Notifications.update({ subject, description, image_url }, { where:{ id: nID }})
+            if(!updatedNotification)
             return next( new HttpError("Notification Could not Be Updated"));
         
         } catch (error) {   return next( new HttpError(error)) };
 
-    res.status(200).json(updatedNotification);
+    res.status(200).json({message: 'Notification updated successfully.'});
 }
 
 exports.getNotifications  = getNotifications;

@@ -3,36 +3,36 @@ const Teachers = require('./techers-model');
 const Classes = require('./classes-model');
 var db = require("../config/database-config");
 var subjects= db.define('subjects', {
-    Subject_ID: {
+    id: {
         type: sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
     },
-    Subject_Code: {
+    code: {
         type: sequelize.STRING,
         allowNull: false,
         unique: true
     },
-    Subject_Name: {
+    name: {
         type: sequelize.STRING,
         allowNull: false
     },
-    Exam_Date: {
-        type: sequelize.STRING,
+    exam_date: {
+        type: sequelize.DATE,
         allowNull: true
     },
-    Exam_Start_Time: {
-        type: sequelize.STRING,
+    exam_start_time: {
+        type: sequelize.DATE,
         allowNull: true
     },
-    Exam_End_Time: {
-        type: sequelize.STRING,
+    exam_end_time: {
+        type: sequelize.DATE,
         allowNull: true
     }
 });
 
-subjects.belongsTo(Teachers,{foreignKey: 'ID'});
-subjects.belongsTo(Classes,{foreignKey: 'Class_ID'});
+subjects.belongsTo(Teachers,{foreignKey: 'teacher_id'});
+subjects.belongsTo(Classes,{foreignKey: 'calss_id'});
 
 module.exports= subjects;

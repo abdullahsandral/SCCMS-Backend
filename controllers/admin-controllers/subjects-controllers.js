@@ -7,7 +7,7 @@ const db = require('../../config/database-config');
 
 const get1ClassSubjects = async (cID,next) =>
 {  
-    try {   return await db.query(`SELECT s.Subject_ID, s.Subject_Code, s.Subject_Name, t.ID, t.First_Name, t.Last_Name FROM subjects as s INNER JOIN teachers as t on s.ID = t.ID WHERE s.Class_ID = '${cID}' ORDER BY s.Subject_ID ASC`,
+    try {   return await db.query(`SELECT s.id, s.code, s.name, t.id, t.first_name, t.last_name FROM subjects as s INNER JOIN teachers as t on s.id = t.id WHERE s.id = '${cID}' ORDER BY s.id ASC`,
         {type: db.QueryTypes.SELECT})} 
     catch (error) {  return next( new HttpError(error))  }
 }
@@ -43,23 +43,23 @@ const addSubjectsToClass = async (req, res, next) =>
     let existingSubjects;
     try 
     {
-        existingSubjects = await SUBJECTS.findAll({where:{Class_ID:sClass}})
+        existingSubjects = await SUBJECTS.findAll({where:{id:sClass}})
     } catch (error) { return next( new HttpError(error))   }
 
     if(existingSubjects.length>0)
     {
         let subjects2BeDeleted = existingSubjects.filter( eSubject =>
         {   for(const pSubject of subjects)
-            if(pSubject.subjectCode===eSubject.Subject_Code) return false;
+            if(pSubject.subjectCode===eSubject.code) return false;
             return true  
         });
         for(const dSubject of subjects2BeDeleted)
         {// Clear Foriegn Key Constraints
             console.log('DELETING ATTENDANCE')
-            try { await ATTENDANCE.destroy({where: {Subject_ID: dSubject.Subject_ID, Class_ID: sClass}})}
+            try { await ATTENDANCE.destroy({where: {id: dSubject.id, id: sClass}})}
             catch (error) { return next( new HttpError(error))   }
 
-            try { await SUBJECTS.destroy({where: {Subject_Code: dSubject.Subject_Code, Class_ID: sClass}})}
+            try { await SUBJECTS.destroy({where: {code: dSubject.code, id: sClass}})}
             catch (error) { return next( new HttpError(error))   }
         }
     }
@@ -70,13 +70,13 @@ const addSubjectsToClass = async (req, res, next) =>
     {
         try 
         {
-            subjectCheker = await SUBJECTS.findOne({where:{Subject_Code: subject.subjectCode}})
+            subjectCheker = await SUBJECTS.findOne({where:{code: subject.subjectCode}})
 
             if(!subjectCheker) 
-            subjectCheker = await SUBJECTS.create({Subject_Code: subject.subjectCode, Subject_Name: subject.subjectName, ID: subject.subjectTeacher, Class_ID: sClass})
+            subjectCheker = await SUBJECTS.create({code: subject.subjectCode, name: subject.subjectName, id: subject.subjectTeacher, id: sClass})
             else
-            subjectCheker = SUBJECTS.update({Subject_Name: subject.subjectName, ID: subject.subjectTeacher},
-                {where:{Subject_Code: subject.subjectCode}});
+            subjectCheker = SUBJECTS.update({name: subject.subjectName, id: subject.subjectTeacher},
+                {where:{code: subject.subjectCode}});
             
             if(!subjectCheker)
             return next( new HttpError("Subjects Could not Be Created OR Updated"));
@@ -92,7 +92,7 @@ const addSubjectsToClass = async (req, res, next) =>
 
 const get1ClassExamSchedule = async (cID,next) =>
 {  
-    try {   return await SUBJECTS.findAll( {where: {Class_ID:cID}});    } 
+    try {   return await SUBJECTS.findAll( {where: {id:cID}});    } 
     catch (error) {   return next( new HttpError(error)) };
 }
 
@@ -114,8 +114,8 @@ const updateClassSubjectsExamScedule =  async (req, res, next) =>
     {
         try 
         {
-            newSubject = await SUBJECTS.update({Exam_Date: subject.date, Exam_Start_Time: subject.startTime, Exam_End_Time: subject.endTime},
-                {where: {Subject_ID: subject.sID}})
+            newSubject = await SUBJECTS.update({exam_date: subject.date, exam_start_time: subject.startTime, exam_end_time: subject.endTime},
+                {where: {id: subject.sID}})
         
             if(!newSubject) 
             return next( new HttpError("Subjects Could not Be Created"));

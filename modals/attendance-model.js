@@ -5,24 +5,24 @@ const Stuednts = require('./students-model');
 const Subjects = require('./subjects-model');
 
 var Attendance = db.define('attendance', {
-    ID : {
+    id : {
         type: sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
     },
-    Attendance_Status: {
+    status: {
         type: sequelize.TINYINT,
         allowNull: false
     },
-    Attendance_Date: {
-        type: sequelize.STRING,
+    attendance_date: {
+        type: sequelize.DATE,
         allowNull: false
     },
 });
 
-Attendance.belongsTo(Classes,{foreignKey: 'Class_ID'});
-Attendance.belongsTo(Stuednts,{foreignKey: 'ID'});
-Attendance.belongsTo(Subjects,{foreignKey: 'Subject_ID'});
+Attendance.belongsTo(Classes,{foreignKey: 'class_id'});
+Attendance.belongsTo(Stuednts,{foreignKey: 'student_id'});
+Attendance.belongsTo(Subjects,{foreignKey: 'id'});
 
 module.exports= Attendance;

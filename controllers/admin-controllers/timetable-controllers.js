@@ -5,10 +5,10 @@ const HttpError = require('../../modals/HTTP-Error');
 const getClassTTandSUBJECTS = async (cID,next) =>
 {
     let classTimeTable, classSubjects;
-    try {   classTimeTable = await TimeTable.findAll({where: {Class_ID : cID}}); } 
+    try {   classTimeTable = await TimeTable.findAll({where: {id : cID}}); } 
     catch (error) {return next(new HttpError(error))}
 
-    try {   classSubjects = await Subjects.findAll({where: {Class_ID : cID}},); } 
+    try {   classSubjects = await Subjects.findAll({where: {id : cID}},); } 
     catch (error) {return next(new HttpError(error))}
 
     return await {classTimeTable: classTimeTable, classSubjects: classSubjects}
@@ -31,7 +31,7 @@ const updateTimeTable = async (req, res, next) =>
 
     try 
     {
-        await TimeTable.destroy({where:{Class_ID:sClass}})
+        await TimeTable.destroy({where:{id:sClass}})
     } catch (error) { return next( new HttpError(error))   }
 
     for(oneDay of timetable)
@@ -39,7 +39,7 @@ const updateTimeTable = async (req, res, next) =>
         const {dayName, lec1, lec2, lec3, lec4, lec5, lec6, lec7} = oneDay;
         try 
         {
-            dayTTable = await TimeTable.create({Day_Name: dayName, Lec_1: lec1, Lec_2: lec2, Lec_3: lec3, Lec_4: lec4, Lec_5: lec5, Lec_6: lec6, Lec_7: lec7, Class_ID: sClass})
+            dayTTable = await TimeTable.create({day_name: dayName, lec_1: lec1, lec_2: lec2, lec_3: lec3, lec_4: lec4, lec_5: lec5, lec_6: lec6, lec_7: lec7, id: sClass})
         
             if(!dayTTable) 
             return next( new HttpError("Subjects Could not Be Created"));

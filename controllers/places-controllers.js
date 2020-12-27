@@ -29,7 +29,7 @@ const getPlaceById = async (req, res, next) =>
         place = await Places.findOne({where : {P_ID : pid}});
 
         if(!place) 
-        return next( new HttpError("Place with this ID Does Not Exist", 404));
+        return next( new HttpError("Place with this id Does Not Exist", 404));
     
     } catch (error) {   return next( new HttpError(error)) };
 
@@ -45,7 +45,7 @@ const getPlacesByUserId = async (req, res, next) =>
         userPlaces = await Places.findAll({where : {userUID : uid}});
 
         if(userPlaces<=0) 
-        return next( new HttpError("Places against this USER ID Do Not Exist",404));
+        return next( new HttpError("Places against this USER id Do Not Exist",404));
 
     } catch (error) {   return next( new HttpError(error)) };
 
@@ -65,7 +65,7 @@ const updatePlaceById = async (req , res , next) =>
         place2BeUpdated = await Places.findOne({where : {P_ID : pid}})
 
         if(!place2BeUpdated) 
-        return next( new HttpError("Place with this ID Does Not Exist", 404));
+        return next( new HttpError("Place with this id Does Not Exist", 404));
 
     } catch (error) {   return next( new HttpError(error)) };
 
@@ -128,7 +128,7 @@ const deletePlaceById = async (req , res , next) =>
         place2BeDeleted = await Places.findOne({where : {P_ID : pid}});
 
         if(!place2BeDeleted) 
-        return next( new HttpError("Place with this ID Does Not Exist", 404));
+        return next( new HttpError("Place with this id Does Not Exist", 404));
 
         userID = place2BeDeleted.userUID;
         placeImage = place2BeDeleted.P_Image;

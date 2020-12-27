@@ -12,17 +12,17 @@ const getAttendance = async (req, res, next) =>
     var student;
     try 
     {
-        student = await Students.findOne({where: {ID: sID}});
+        student = await Students.findOne({where: {id: sID}});
 
-        if(!student) return next(new HttpError("No Student Exist with This ID"));
-        // student = await db.query(`SELECT * FROM students as s INNER JOIN classes as c on c.Class_ID=s.Class_ID WHERE s.ID = '${sID}' `,
+        if(!student) return next(new HttpError("No Student Exist with This id"));
+        // student = await db.query(`SELECT * FROM students as s INNER JOIN classes as c on c.id=s.id WHERE s.id = '${sID}' `,
         // {type: db.QueryTypes.SELECT})
        
     } catch (error) {return next(new HttpError(error))}
     let subjects
     try 
     {
-        subjects = await Subjects.findAll({where: {Class_ID: student.Class_ID},order:[['Subject_Name', 'ASC']]});
+        subjects = await Subjects.findAll({where: {id: student.id},order:[['name', 'ASC']]});
 
         // if(!subjects) return next(new HttpError("No Subject Exist Against This Student"));
        
@@ -30,7 +30,7 @@ const getAttendance = async (req, res, next) =>
     let attendance;
     try 
     {
-        attendance = await Attendance.findAll({where: {Class_ID: student.Class_ID, ID: student.ID},
+        attendance = await Attendance.findAll({where: {id: student.id, id: student.id},
             order:[['Attendance_Date', 'ASC']]});
 
         if(!attendance) return next(new HttpError("No Subject Exist Against This Student"));

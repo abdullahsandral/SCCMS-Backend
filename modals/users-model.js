@@ -1,29 +1,32 @@
 var sequelize = require("sequelize");
 var db = require("../config/database-config");
 var users= db.define('users', {
-    User_ID: {
+    id: {
         type: sequelize.STRING,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
     },
-    Name: {
-        type: sequelize.STRING,
-        allowNull: false
-    },
-    User_Name: {
+    user_name: {
         type: sequelize.STRING,
         allowNull: false ,
     },
-    Password: {
+    password: {
         type: sequelize.STRING,
         allowNull: false 
     },
-    Role: {
+    role: {
+        type: sequelize.STRING,
+        allowNull: false 
+    },
+    user_id: {
+        type: sequelize.STRING,
+        allowNull: false 
+    },
+    image_url: {
         type: sequelize.STRING,
         allowNull: false 
     }
-    
 });
 
 module.exports= users;

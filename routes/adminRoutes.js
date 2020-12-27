@@ -17,6 +17,16 @@ router.post('/students/' , fileUpload.single('newStudentImage'), studentsControl
 
 router.post('/students/:sID' , fileUpload.single('newStudentImage'), studentsControllers.editStudentById);
 
+// Teachers Routes
+
+router.get('/teachers/', teachersControllers.getAllTeachers);
+
+router.get('/teachers/:tID' , teachersControllers.getTeacherById);
+
+router.post('/teachers/' , fileUpload.single('newTeacherImage'), teachersControllers.createNewTeacher);
+
+router.post('/teachers/:tID' , fileUpload.single('newTeacherImage'), teachersControllers.editTeacherById);
+
 // Subjects Routes
 
 router.get('/subjects/classesANDteachers' ,subjectsControllers.getClassesAndTeachersList);
@@ -28,16 +38,6 @@ router.get('/subjects/examSchedule/:cID' ,subjectsControllers.getClassSubjectsEx
 router.post('/subjects/examSchedule/:cID' ,subjectsControllers.updateClassSubjectsExamScedule);
 
 router.post('/subjects/' ,subjectsControllers.addSubjectsToClass);
-
-// Teachers Routes
-
-router.get('/teachers/', teachersControllers.getAllTeachers);
-
-router.get('/teachers/:tID' , teachersControllers.getTeacherById);
-
-router.post('/teachers/' , fileUpload.single('newTeacherImage'), teachersControllers.createNewTeacher);
-
-router.post('/teachers/:tID' , fileUpload.single('newTeacherImage'), teachersControllers.editTeacherById);
 
 // TimeTable Routes
 

@@ -10,7 +10,7 @@ const viewProfile = async (req, res, next) =>
     var teacher;
     try 
     {
-        teacher = await Teachers.findOne({where: {ID: tID}})
+        teacher = await Teachers.findOne({where: {id: tID}})
        
     } catch (error) {return next(new HttpError(error))}
     

@@ -10,7 +10,6 @@ const getAllClasses = async (req, res, next) =>
     try 
     {
         allClasses = await Classes.findAll();
-       console.log(allClasses)
     } catch (error) {return next(new HttpError(error))}
   
     setTimeout(() => res.status(200).send(allClasses),500)
@@ -22,7 +21,7 @@ const getOneClass = async (req, res, next) =>
     let oneClass;
     try 
     {
-        oneClass = await Classes.findOne({where: {Class_ID: cID}});
+        oneClass = await Classes.findOne({where: {id: cID}});
        
     } catch (error) {return next(new HttpError(error))}
   

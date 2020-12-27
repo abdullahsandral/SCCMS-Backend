@@ -2,70 +2,66 @@ const sequelize = require("sequelize");
 const db = require("../config/database-config");
 const Classes = require('./classes-model');
 const students= db.define('students', {
-    ID: {
+    id: {
         type: sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
     },
-    Roll_Number: {
+    roll_no: {
         type: sequelize.STRING,
         allowNull: false
     },
-    Image: {
+    image_url: {
         type: sequelize.STRING,
         allowNull: false
     },
-    First_Name: {
+    first_name: {
         type: sequelize.STRING,
         allowNull: false 
     },
-    Last_Name: {
+    last_name: {
         type: sequelize.STRING,
         allowNull: false 
     },
-    Father_Name: {
+    father_name: {
         type: sequelize.STRING,
         allowNull: false 
     },
-    CNIC_Number: {
+    cnic: {
         type: sequelize.STRING,
         allowNull: false 
     },
-    Contact_Number: {
+    contact_number: {
         type: sequelize.STRING,
         allowNull: false 
     },
-    Father_Contact: {
+    father_contact_number: {
         type: sequelize.STRING,
         allowNull: false 
     },
-    E_Mail: {
+    email: {
         type: sequelize.STRING,
         allowNull: false 
     },
-    Gender: {
+    gender: {
         type: sequelize.STRING,
         allowNull: false 
     },
-    Permanent_Address: {
+    permanent_address: {
         type: sequelize.STRING,
         allowNull: false 
     },
-    Mailing_Address: {
+    mailing_address: {
         type: sequelize.STRING,
         allowNull: false 
     },
-    Date_Of_Birth: {
-        type: sequelize.STRING,
-        allowNull: false 
-    },
-    Password: {
-        type: sequelize.INTEGER,
+    date_of_birth: {
+        type: sequelize.DATE,
         allowNull: false 
     },
 });
 
- students.belongsTo(Classes,{foreignKey: 'Class_ID'});
+ students.belongsTo(Classes,{foreignKey: 'class_id'});
 
 module.exports= students;
