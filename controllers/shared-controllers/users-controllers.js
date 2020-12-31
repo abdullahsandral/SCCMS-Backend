@@ -1,16 +1,13 @@
 const db = require('../../config/database-config');
 const bcrypt = require('bcryptjs');
 
-const Students = require('../../modals/students-model');
-const Teachers = require('../../modals/techers-model');
-const Admins = require('../../modals/admins-model');
 const Users = require('../../modals/users-model');
 const HttpError = require('../../modals/HTTP-Error');
 
 const getAllUsers = async (req, res, next) =>
 {
     var allUsers;
-    try 
+    try
     {
        allUsers = await Users.findAll();
     } catch (error) {return next(new HttpError(error))}

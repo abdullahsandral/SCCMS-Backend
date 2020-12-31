@@ -1,7 +1,7 @@
 const HttpError = require('../../modals/HTTP-Error');
-const SUBJECTS = require('../../modals/subjects-model');
-const CLASSES = require('../../modals/classes-model');
-const TEACHERS = require('../../modals/techers-model');
+const Subjects = require('../../modals/subjects-model');
+const Classes = require('../../modals/classes-model');
+const Teachers = require('../../modals/techers-model');
 const ATTENDANCE = require('../../modals/attendance-model');
 const db = require('../../config/database-config');
 
@@ -15,7 +15,7 @@ const get1ClassSubjects = async (cID,next) =>
 const getClassSubjects = async (req, res, next) =>
 {
     const cID = req.params.cID;
-    let classSubjects = await get1ClassSubjects(cID,next);
+    let classSubjects = await Subjects.findAll({where: { class_id : cID }, include: [Classes, Teachers]})
 
     setTimeout(()=>res.status(200).json(classSubjects),500)
 }
@@ -25,12 +25,12 @@ const getClassesAndTeachersList = async (req, res, next) =>
     let classes,teachers;
     try 
     {
-        classes = await CLASSES.findAll();
+        classes = await Classes.findAll();
     } catch (error) {   return next( new HttpError(error)) };
         
     try 
     {
-        teachers = await TEACHERS.findAll();
+        teachers = await Teachers.findAll();
     } catch (error) {   return next( new HttpError(error)) };
 
   setTimeout(()=>  res.status(200).json({classes: classes, teachers: teachers}),500)
@@ -41,9 +41,9 @@ const addSubjectsToClass = async (req, res, next) =>
 {
     const {subjects,sClass} = req.body; 
     let existingSubjects;
-    try 
+    try
     {
-        existingSubjects = await SUBJECTS.findAll({where:{id:sClass}})
+        existingSubjects = await Subjects.findAll({where:{id:sClass}})
     } catch (error) { return next( new HttpError(error))   }
 
     if(existingSubjects.length>0)
@@ -59,7 +59,7 @@ const addSubjectsToClass = async (req, res, next) =>
             try { await ATTENDANCE.destroy({where: {id: dSubject.id, id: sClass}})}
             catch (error) { return next( new HttpError(error))   }
 
-            try { await SUBJECTS.destroy({where: {code: dSubject.code, id: sClass}})}
+            try { await Subjects.destroy({where: {code: dSubject.code, id: sClass}})}
             catch (error) { return next( new HttpError(error))   }
         }
     }
@@ -70,12 +70,12 @@ const addSubjectsToClass = async (req, res, next) =>
     {
         try 
         {
-            subjectCheker = await SUBJECTS.findOne({where:{code: subject.subjectCode}})
+            subjectCheker = await Subjects.findOne({where:{code: subject.subjectCode}})
 
             if(!subjectCheker) 
-            subjectCheker = await SUBJECTS.create({code: subject.subjectCode, name: subject.subjectName, id: subject.subjectTeacher, id: sClass})
+            subjectCheker = await Subjects.create({code: subject.subjectCode, name: subject.subjectName, id: subject.subjectTeacher, id: sClass})
             else
-            subjectCheker = SUBJECTS.update({name: subject.subjectName, id: subject.subjectTeacher},
+            subjectCheker = Subjects.update({name: subject.subjectName, id: subject.subjectTeacher},
                 {where:{code: subject.subjectCode}});
             
             if(!subjectCheker)
@@ -92,7 +92,7 @@ const addSubjectsToClass = async (req, res, next) =>
 
 const get1ClassExamSchedule = async (cID,next) =>
 {  
-    try {   return await SUBJECTS.findAll( {where: {id:cID}});    } 
+    try {   return await Subjects.findAll( {where: {id:cID}});    } 
     catch (error) {   return next( new HttpError(error)) };
 }
 
@@ -114,7 +114,7 @@ const updateClassSubjectsExamScedule =  async (req, res, next) =>
     {
         try 
         {
-            newSubject = await SUBJECTS.update({exam_date: subject.date, exam_start_time: subject.startTime, exam_end_time: subject.endTime},
+            newSubject = await Subjects.update({exam_date: subject.date, exam_start_time: subject.startTime, exam_end_time: subject.endTime},
                 {where: {id: subject.sID}})
         
             if(!newSubject) 

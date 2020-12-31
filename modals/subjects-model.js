@@ -33,6 +33,6 @@ var subjects= db.define('subjects', {
 });
 
 subjects.belongsTo(Teachers,{foreignKey: 'teacher_id'});
-subjects.belongsTo(Classes,{foreignKey: 'calss_id'});
+subjects.belongsTo(Classes,{foreignKey: 'class_id'});
 
 module.exports= subjects;
