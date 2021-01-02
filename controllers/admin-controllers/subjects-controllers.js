@@ -63,7 +63,7 @@ const updateClassSubjects = async (req, res, next) =>
     console.log(subjects)
     Subjects.bulkCreate(subjects,{
         fields:['id','code', 'name', 'teacher_id', 'class_id'] ,
-        updateOnDuplicate: ['code', 'name', 'teacher_id'] 
+        updateOnDuplicate: ['code', 'name', 'teacher_id']   `   `
     })
     // for(let subject of subjects) {
     //     if(subject._destroy) {
