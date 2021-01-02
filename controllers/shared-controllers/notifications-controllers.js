@@ -10,7 +10,6 @@ const getNotifications = async (req, res, next) =>
             notifications = await Notifications.findAll({ include: Users });
         } catch (error) {   return next( new HttpError(error)) };
     
-
     setTimeout(()=>res.status(200).json(notifications),500)
 }
 

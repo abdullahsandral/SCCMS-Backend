@@ -4,13 +4,7 @@ const Classes = require('../../modals/classes-model');
 const Teachers = require('../../modals/techers-model');
 const ATTENDANCE = require('../../modals/attendance-model');
 const db = require('../../config/database-config');
-
-const get1ClassSubjects = async (cID,next) =>
-{  
-    try {   return await db.query(`SELECT s.id, s.code, s.name, t.id, t.first_name, t.last_name FROM subjects as s INNER JOIN teachers as t on s.id = t.id WHERE s.id = '${cID}' ORDER BY s.id ASC`,
-        {type: db.QueryTypes.SELECT})} 
-    catch (error) {  return next( new HttpError(error))  }
-}
+const { where } = require('../../config/database-config');
 
 const getClassSubjects = async (req, res, next) =>
 {
@@ -20,73 +14,68 @@ const getClassSubjects = async (req, res, next) =>
     setTimeout(()=>res.status(200).json(classSubjects),500)
 }
 
-const getClassesAndTeachersList = async (req, res, next) =>
-{
-    let classes,teachers;
-    try 
-    {
-        classes = await Classes.findAll();
-    } catch (error) {   return next( new HttpError(error)) };
-        
-    try 
-    {
-        teachers = await Teachers.findAll();
-    } catch (error) {   return next( new HttpError(error)) };
-
-  setTimeout(()=>  res.status(200).json({classes: classes, teachers: teachers}),500)
-        
-}
-
-const addSubjectsToClass = async (req, res, next) =>
+const updateClassSubjects = async (req, res, next) =>
 {
     const {subjects,sClass} = req.body; 
-    let existingSubjects;
-    try
-    {
-        existingSubjects = await Subjects.findAll({where:{id:sClass}})
-    } catch (error) { return next( new HttpError(error))   }
+    // let existingSubjects;
+    // try
+    // {
+    //     existingSubjects = await Subjects.findAll({where:{id:sClass}})
+    // } catch (error) { return next( new HttpError(error))   }
 
-    if(existingSubjects.length>0)
-    {
-        let subjects2BeDeleted = existingSubjects.filter( eSubject =>
-        {   for(const pSubject of subjects)
-            if(pSubject.subjectCode===eSubject.code) return false;
-            return true  
-        });
-        for(const dSubject of subjects2BeDeleted)
-        {// Clear Foriegn Key Constraints
-            console.log('DELETING ATTENDANCE')
-            try { await ATTENDANCE.destroy({where: {id: dSubject.id, id: sClass}})}
-            catch (error) { return next( new HttpError(error))   }
+    // if(existingSubjects.length > 0)
+    // {
+    //     let subjects2BeDeleted = existingSubjects.filter( eSubject =>
+    //     {   for(const pSubject of subjects)
+    //         if(pSubject.subjectCode===eSubject.code) return false;
+    //         return true  
+    //     });
+    //     for(const dSubject of subjects2BeDeleted)
+    //     {// Clear Foriegn Key Constraints
+    //         console.log('DELETING ATTENDANCE')
+    //         try { await ATTENDANCE.destroy({where: {id: dSubject.id, id: sClass}})}
+    //         catch (error) { return next( new HttpError(error))   }
 
-            try { await Subjects.destroy({where: {code: dSubject.code, id: sClass}})}
-            catch (error) { return next( new HttpError(error))   }
-        }
-    }
+    //         try { await Subjects.destroy({where: {code: dSubject.code, id: sClass}})}
+    //         catch (error) { return next( new HttpError(error))   }
+    //     }
+    // }
 
-    let subjectCheker;
+    // let subjectCheker;
 
-    for(subject of subjects)
-    {
-        try 
-        {
-            subjectCheker = await Subjects.findOne({where:{code: subject.subjectCode}})
+    // for(subject of subjects)
+    // {
+    //     try 
+    //     {
+    //         subjectCheker = await Subjects.findOne({where:{code: subject.subjectCode}})
 
-            if(!subjectCheker) 
-            subjectCheker = await Subjects.create({code: subject.subjectCode, name: subject.subjectName, id: subject.subjectTeacher, id: sClass})
-            else
-            subjectCheker = Subjects.update({name: subject.subjectName, id: subject.subjectTeacher},
-                {where:{code: subject.subjectCode}});
+    //         if(!subjectCheker) 
+    //         subjectCheker = await Subjects.create({code: subject.subjectCode, name: subject.subjectName, id: subject.subjectTeacher, id: sClass})
+    //         else
+    //         subjectCheker = Subjects.update({name: subject.subjectName, id: subject.subjectTeacher},
+    //             {where:{code: subject.subjectCode}});
             
-            if(!subjectCheker)
-            return next( new HttpError("Subjects Could not Be Created OR Updated"));
+    //         if(!subjectCheker)
+    //         return next( new HttpError("Subjects Could not Be Created OR Updated"));
         
-        } catch (error) {   return next( new HttpError(error)) };
-    }
+    //     } catch (error) {   return next( new HttpError(error)) };
+    // }
+    console.log(subjects)
+    Subjects.bulkCreate(subjects,{
+        fields:['id','code', 'name', 'teacher_id', 'class_id'] ,
+        updateOnDuplicate: ['code', 'name', 'teacher_id'] 
+    })
+    // for(let subject of subjects) {
+    //     if(subject._destroy) {
+    //         await Subjects.destroy({ where: { id: subject.id}})
+    //     } else {
+    //         const { id, code, name, teacher_id, } = subject
+    //         await Subjects.upsert({ id, code, name, teacher_id }, {id})
+    //     }
+    // }
+    // let classSubjects = await get1ClassSubjects(sClass);
 
-    let classSubjects = await get1ClassSubjects(sClass);
-
-    setTimeout(()=>res.status(200).json(classSubjects),500)
+    setTimeout(()=>res.status(200).json('s'),500)
 }
 
 
@@ -129,7 +118,6 @@ const updateClassSubjectsExamScedule =  async (req, res, next) =>
     }
 
 exports.getClassSubjects  = getClassSubjects;
-exports.getClassSubjectsExamScedule = getClassSubjectsExamScedule;
-exports.getClassesAndTeachersList = getClassesAndTeachersList;
-exports.addSubjectsToClass  = addSubjectsToClass;
-exports.updateClassSubjectsExamScedule  = updateClassSubjectsExamScedule;
+exports.updateClassSubjects  = updateClassSubjects;
+// exports.getClassSubjectsExamScedule = getClassSubjectsExamScedule;
+// exports.addSubjectsToClass  = addSubjectsToClass;

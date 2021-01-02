@@ -7,7 +7,8 @@ var subjects= db.define('subjects', {
         type: sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
+        unique: true
     },
     code: {
         type: sequelize.STRING,

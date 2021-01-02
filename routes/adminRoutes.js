@@ -29,15 +29,14 @@ router.post('/teachers/:tID' , fileUpload.single('newTeacherImage'), teachersCon
 
 // Subjects Routes
 
-router.get('/subjects/classesANDteachers' ,subjectsControllers.getClassesAndTeachersList);
-
 router.get('/subjects/:cID' ,subjectsControllers.getClassSubjects);
 
-router.get('/subjects/examSchedule/:cID' ,subjectsControllers.getClassSubjectsExamScedule);
+router.post('/subjects/:cID' ,subjectsControllers.updateClassSubjects);
 
-router.post('/subjects/examSchedule/:cID' ,subjectsControllers.updateClassSubjectsExamScedule);
+// router.get('/subjects/examSchedule/:cID' ,subjectsControllers.getClassSubjectsExamScedule);
 
-router.post('/subjects/' ,subjectsControllers.addSubjectsToClass);
+// router.post('/subjects/examSchedule/:cID' ,subjectsControllers.updateClassSubjectsExamScedule);
+
 
 // TimeTable Routes
 
