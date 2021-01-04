@@ -16,66 +16,29 @@ const getClassSubjects = async (req, res, next) =>
 
 const updateClassSubjects = async (req, res, next) =>
 {
-    const {subjects,sClass} = req.body; 
-    // let existingSubjects;
-    // try
-    // {
-    //     existingSubjects = await Subjects.findAll({where:{id:sClass}})
-    // } catch (error) { return next( new HttpError(error))   }
+    const cID = req.params.cID;
+    const { subjects, deletedSubjects } = req.body; 
+    try {
+        await Subjects.destroy({ where: { id: deletedSubjects } });
+    } catch (error) {
+        console.log('SUBJECTS COULD NOT BE DELETED.')
+    }
 
-    // if(existingSubjects.length > 0)
-    // {
-    //     let subjects2BeDeleted = existingSubjects.filter( eSubject =>
-    //     {   for(const pSubject of subjects)
-    //         if(pSubject.subjectCode===eSubject.code) return false;
-    //         return true  
-    //     });
-    //     for(const dSubject of subjects2BeDeleted)
-    //     {// Clear Foriegn Key Constraints
-    //         console.log('DELETING ATTENDANCE')
-    //         try { await ATTENDANCE.destroy({where: {id: dSubject.id, id: sClass}})}
-    //         catch (error) { return next( new HttpError(error))   }
-
-    //         try { await Subjects.destroy({where: {code: dSubject.code, id: sClass}})}
-    //         catch (error) { return next( new HttpError(error))   }
-    //     }
-    // }
-
-    // let subjectCheker;
-
-    // for(subject of subjects)
-    // {
-    //     try 
-    //     {
-    //         subjectCheker = await Subjects.findOne({where:{code: subject.subjectCode}})
-
-    //         if(!subjectCheker) 
-    //         subjectCheker = await Subjects.create({code: subject.subjectCode, name: subject.subjectName, id: subject.subjectTeacher, id: sClass})
-    //         else
-    //         subjectCheker = Subjects.update({name: subject.subjectName, id: subject.subjectTeacher},
-    //             {where:{code: subject.subjectCode}});
-            
-    //         if(!subjectCheker)
-    //         return next( new HttpError("Subjects Could not Be Created OR Updated"));
+    try {
+        await Subjects.bulkCreate(subjects,{
+            fields:['id','code', 'name', 'teacher_id', 'class_id'] ,
+            updateOnDuplicate: ['code', 'name', 'teacher_id']
+        })
+    } catch (error) {
+        console.log('SUBJECTS COULD NOT BE UPDATED', error)
+    }
+    let classSubjects;
+    try {
+        classSubjects = await Subjects.findAll({ where: { class_id: cID }})
+    } catch (error) {
         
-    //     } catch (error) {   return next( new HttpError(error)) };
-    // }
-    console.log(subjects)
-    Subjects.bulkCreate(subjects,{
-        fields:['id','code', 'name', 'teacher_id', 'class_id'] ,
-        updateOnDuplicate: ['code', 'name', 'teacher_id']   `   `
-    })
-    // for(let subject of subjects) {
-    //     if(subject._destroy) {
-    //         await Subjects.destroy({ where: { id: subject.id}})
-    //     } else {
-    //         const { id, code, name, teacher_id, } = subject
-    //         await Subjects.upsert({ id, code, name, teacher_id }, {id})
-    //     }
-    // }
-    // let classSubjects = await get1ClassSubjects(sClass);
-
-    setTimeout(()=>res.status(200).json('s'),500)
+    }
+    setTimeout(()=>res.status(200).json(classSubjects),500)
 }
 
 
