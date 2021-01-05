@@ -19,18 +19,6 @@ var subjects= db.define('subjects', {
         type: sequelize.STRING,
         allowNull: false
     },
-    exam_date: {
-        type: sequelize.DATE,
-        allowNull: true
-    },
-    exam_start_time: {
-        type: sequelize.DATE,
-        allowNull: true
-    },
-    exam_end_time: {
-        type: sequelize.DATE,
-        allowNull: true
-    }
 });
 
 subjects.belongsTo(Teachers,{foreignKey: 'teacher_id'});
